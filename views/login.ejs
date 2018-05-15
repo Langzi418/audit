@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="wloginidth=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.min.css">
+	<link rel="stylesheet" href="./styles/materialize.min.css">
+	<link rel="stylesheet" href="./styles/login.css">
+	<title>登录</title>
+</head>
+
+<body>
+	<div id="login" class="container">
+		<form action="./login-check" method="POST">
+			<div class="input-field">
+				<i class="material-icons prefix">
+					account_circle
+				</i>
+				<input id="username" type="text" name="username">
+				<label for="username">用户名</label>
+			</div>
+
+			<div class="input-field">
+				<i class="material-icons prefix">
+					vpn_key
+				</i>
+				<input id="password" type="password" name="password">
+				<label for="password">密码</label>
+			</div>
+
+			<p>
+				<label>
+					<input type="checkbox" />
+					<span>记住密码</span>
+				</label>
+			</p>
+
+			<p>
+				<button id="login-btn" class="waves-effect waves-light btn">登录</button>
+			</p>
+
+		</form>
+
+	</div>
+
+	<script src="./scripts/materialize.min.js"></script>
+</body>
+
+</html>
