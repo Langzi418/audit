@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "set NODE_ENV=development&&node start index.js",
+    "dev": "set NODE_ENV=development&&node index.js",
     "prod": "set NODE_ENV=production&&node index.js"
   },
   "keywords": [],
