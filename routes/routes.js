@@ -1,18 +1,19 @@
 const path = require('path')
 const UAParser = require('ua-parser-js')
+const USERS = require('../config/users')
 
 function checkLogin(req, res, next) {
   // req session 中 无 user
-  if (!req.session.user) {
+  if (!req.session.username) {
     return res.redirect('login')
   }
 
   next()
 }
 
-function checkNotLogin(req, res, next) {
+function isLogined(req, res, next) {
   // req session 中 有 user
-  if (req.session.user) {
+  if (req.session.username) {
     return res.redirect('index')
   }
 
@@ -25,17 +26,32 @@ module.exports = app => {
   })
 
   app.get('/index', checkLogin, (req, res) => {
-    res.render('index')
+    var username = req.session.username
+    res.render('index', { username })
   })
 
-  app.get('/login', checkNotLogin, (req, res) => {
+  app.get('/login', isLogined, (req, res) => {
     res.render('login')
   })
 
-  app.post('/login-check', checkNotLogin, (req, res) => {
-    var user = req.body.username
-    req.session.user = user
-    // var ua = UAParser(req.headers['user-agent'])
-    res.redirect('index')
+  app.post('/login-check', isLogined, (req, res) => {
+    var username = req.body.username
+    var password = req.body.password
+
+    if (Object.keys(USERS).indexOf(username) !== -1) {
+      if (USERS[username] === password) {
+        req.session.username = username
+        res.redirect('index')
+        return
+      }
+    }
+
+    // 登录失败
+    res.redirect('login')
+  })
+
+  app.get('/logout', (req, res) => {
+    req.session.username = null
+    res.render('login')
   })
 }
