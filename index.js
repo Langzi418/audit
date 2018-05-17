@@ -3,13 +3,8 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const routes = require('./routes/routes')
-
-var config
-if (process.env.NODE_ENV === 'development') {
-  config = require('./config/dev')
-} else {
-  config = require('./config/prod')
-}
+const config = require('./config/config')
+const UserModel = require('./models/user')
 
 const app = express()
 
@@ -47,3 +42,19 @@ routes(app)
 app.listen(config.port, () => {
   console.log(`listening on port ${config.port}`)
 })
+
+// 初始化用户
+function initUser(obj) {
+  UserModel.findOne(obj)
+    .then(user => {
+      if (!user) {
+        UserModel.insert(obj)
+      }
+    })
+    .catch(err => {
+      console.log(err.message)
+    })
+}
+
+initUser({ name: 'guest', passwd: '123456' })
+initUser({ name: 'admin', passwd: '123456' })

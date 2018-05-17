@@ -12,35 +12,37 @@
 
 <body>
 	<div id="login" class="container">
-		<form action="/login-check" method="POST">
-			<div class="input-field">
-				<i class="material-icons prefix">
-					account_circle
-				</i>
-				<input id="username" type="text" name="username">
-				<label for="username">用户名</label>
-			</div>
+		<div class="row">
+			<form class="col s12 m6 offset-m3" action="/login-check" method="POST">
+				<div class="input-field">
+					<i class="material-icons prefix">
+						account_circle
+					</i>
+					<input id="username" type="text" name="username">
+					<label for="username">用户名</label>
+				</div>
 
-			<div class="input-field">
-				<i class="material-icons prefix">
-					vpn_key
-				</i>
-				<input id="password" type="password" name="password">
-				<label for="password">密码</label>
-			</div>
+				<div class="input-field">
+					<i class="material-icons prefix">
+						vpn_key
+					</i>
+					<input id="password" type="password" name="password">
+					<label for="password">密码</label>
+				</div>
 
-			<p>
-				<label>
-					<input type="checkbox" />
-					<span>记住密码</span>
-				</label>
-			</p>
+				<p>
+					<label>
+						<input type="checkbox" />
+						<span>记住密码</span>
+					</label>
+				</p>
 
-			<p>
-				<button id="login-btn" class="waves-effect waves-light btn">登录</button>
-			</p>
+				<p>
+					<button id="login-btn" class="waves-effect waves-light btn" type="submit">登录</button>
+				</p>
 
-		</form>
+			</form>
+		</div>
 
 	</div>
 

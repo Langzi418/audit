@@ -1,6 +1,8 @@
 const path = require('path')
 const UAParser = require('ua-parser-js')
-const USERS = require('../config/users')
+const UserModel = require('../models/user')
+const AuditModel = require('../models/audit')
+const GetLocation = require('../utils/iplocation').location
 
 function checkLogin(req, res, next) {
   // req session 中 无 user
@@ -27,7 +29,29 @@ module.exports = app => {
 
   app.get('/index', checkLogin, (req, res) => {
     var username = req.session.username
-    res.render('index', { username })
+    var audit = {
+      ip: req.ip,
+      time: Date.now(),
+      agent: req.headers['user-agent']
+    }
+
+    GetLocation(audit.ip)
+      .then(res => {
+        return res.json()
+      })
+      .then(location => {
+        console.log(location)
+        // var status = {
+        //   location: location.content.address,
+        //   device: UAParser(audit.agent).device.model || 'pc'
+        // }
+        // res.render('index', { username, status })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+    AuditModel.insert(username, audit)
   })
 
   app.get('/login', isLogined, (req, res) => {
@@ -38,20 +62,29 @@ module.exports = app => {
     var username = req.body.username
     var password = req.body.password
 
-    if (Object.keys(USERS).indexOf(username) !== -1) {
-      if (USERS[username] === password) {
-        req.session.username = username
-        res.redirect('index')
-        return
-      }
-    }
-
-    // 登录失败
-    res.redirect('login')
+    UserModel.findOne({ name: username })
+      .then(user => {
+        if (user && user.passwd === password) {
+          req.session.username = username
+          res.redirect('index')
+        } else {
+          // 登录失败
+          res.redirect('login')
+        }
+      })
+      .catch(err => {
+        console.log(err.message)
+      })
   })
 
   app.get('/logout', (req, res) => {
     req.session.username = null
-    res.render('login')
+    res.redirect('login')
+  })
+
+  // test ua
+  app.get('/ua', (req, res) => {
+    console.log(UAParser(req.headers['user-agent']))
+    res.send(UAParser(req.headers['user-agent']))
   })
 }
