@@ -41,14 +41,19 @@ module.exports = app => {
       })
       .then(location => {
         console.log(location)
-        // var status = {
-        //   location: location.content.address,
-        //   device: UAParser(audit.agent).device.model || 'pc'
-        // }
-        // res.render('index', { username, status })
+        var status = {
+          location: location.content.address,
+          device: UAParser(audit.agent).device.model || 'pc'
+        }
+        res.render('index', { username, status })
       })
       .catch(err => {
         console.log(err)
+        var status = {
+          location: '武汉',
+          device: 'pc'
+        }
+        res.render('index', { username, status })
       })
 
     AuditModel.insert(username, audit)
