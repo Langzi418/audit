@@ -52,6 +52,7 @@ module.exports = app => {
       })
       .catch(err => {
         console.log(err)
+        console.log(audit.ip)
         var status = {
           location: '武汉',
           device: UAParser(audit.agent).device.model || 'pc',
