@@ -10,10 +10,11 @@
 
 <body>
   <div class="container">
-    <% audits.forEach(audit => { %>
-      <%- include('./show', {audit}) %>
-        <% }) %>
-
+    <% if(audits){ %>
+      <% audits.forEach(audit => { %>
+        <%- include('./show', {audit}) %>
+          <% }) %>
+            <% } %>
 
   </div>
 </body>

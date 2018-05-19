@@ -126,33 +126,37 @@ module.exports = app => {
       userId: req.session.userId
     })
       .then(audits => {
-        var len = audits.length
-        var cnt = 0
-        var newAudit = []
+        if (audits.length !== 0) {
+          var len = audits.length
+          var cnt = 0
+          var newAudit = []
 
-        audits.forEach(audit => {
-          var time = audit.time
+          audits.forEach(audit => {
+            var time = audit.time
 
-          ToSetting({
-            ip: audit.ip,
-            agent: audit.agent
+            ToSetting({
+              ip: audit.ip,
+              agent: audit.agent
+            })
+              .then(obj => {
+                audit = obj
+                audit.time = time
+                newAudit.push(audit)
+                return ++cnt
+              })
+              .then(cnt => {
+                if (cnt === len) {
+                  newAudit.sort((a, b) => {
+                    return new Date(b.time) - new Date(a.time)
+                  })
+
+                  res.render('./audit/audit', { audits: newAudit })
+                }
+              })
           })
-            .then(obj => {
-              audit = obj
-              audit.time = time
-              newAudit.push(audit)
-              return ++cnt
-            })
-            .then(cnt => {
-              if (cnt === len) {
-                newAudit.sort((a, b) => {
-                  return new Date(b.time) - new Date(a.time)
-                })
-
-                res.render('./audit/audit', { audits: newAudit })
-              }
-            })
-        })
+        } else {
+          res.render('./audit/audit', { audits: null })
+        }
       })
       .catch(err => {
         console.log(err)
