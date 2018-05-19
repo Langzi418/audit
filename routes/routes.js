@@ -35,15 +35,18 @@ module.exports = app => {
       agent: req.headers['user-agent']
     }
 
+    var location
+
     GetLocation(audit.ip)
       .then(res => {
         return res.json()
       })
-      .then(location => {
-        console.log(location)
+      .then(res => {
+        result = JSON.stringify(res)
         var status = {
-          location: location.content.address,
-          device: UAParser(audit.agent).device.model || 'pc'
+          location: res.content.address,
+          device: UAParser(audit.agent).device.model || 'pc',
+          result
         }
         res.render('index', { username, status })
       })
@@ -51,7 +54,8 @@ module.exports = app => {
         console.log(err)
         var status = {
           location: '武汉',
-          device: 'pc'
+          device: UAParser(audit.agent).device.model || 'pc',
+          result
         }
         res.render('index', { username, status })
       })
