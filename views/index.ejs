@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="./styles/materialize.min.css">
+	<link rel="stylesheet" href="./styles/common.css">
 	<title>主页</title>
 </head>
 
@@ -17,7 +18,7 @@
 			</a>
 			<ul class="right">
 				<li>
-					<a href="">安全审计</a>
+					<a href="/audit">安全审计</a>
 				</li>
 				<li>
 					<a href="/logout">注销</a>
@@ -27,20 +28,18 @@
 	</nav>
 
 	<div class="container">
-		<div class="row">
+		<div data-index="set-div" class="row hidden">
 			<div class="col s12 m6 offset-m3">
 				<div class="card blue-grey darken-1">
 					<div class="card-content white-text">
 						<span class="card-title">用户状态</span>
-						<p>位置：
-							<%= status.location %>
+						<p data-index="location">位置：
 						</p>
-						<p>设备：
-							<%= status.device %>
+						<p data-index="device">设备：
 						</p>
 					</div>
 					<div class="card-action">
-						<button class="waves-effect waves-light btn" type="submit">设为常用状态</button>
+						<a data-index="set-btn" class="waves-effect waves-light btn">设为常用状态</a>
 					</div>
 				</div>
 			</div>
@@ -48,6 +47,7 @@
 	</div>
 
 	<script src="./scripts/materialize.min.js"></script>
+	<script src="./scripts/index.js"></script>
 </body>
 
 </html>

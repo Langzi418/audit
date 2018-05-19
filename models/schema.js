@@ -29,8 +29,10 @@ var settingSchema = Schema({
 
 var User = mongoose.model('User', userSchema)
 var Audit = mongoose.model('Audit', auditSchema)
+var Setting = mongoose.model('Setting', settingSchema)
 
 module.exports = {
   User,
-  Audit
+  Audit,
+  Setting
 }

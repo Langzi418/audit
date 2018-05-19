@@ -2,7 +2,9 @@ const path = require('path')
 const UAParser = require('ua-parser-js')
 const UserModel = require('../models/user')
 const AuditModel = require('../models/audit')
-const GetLocation = require('../utils/iplocation').location
+const SettingModel = require('../models/setting')
+const ToSetting = require('../utils/toSetting').toSetting
+const each = require('async').each
 
 function checkLogin(req, res, next) {
   // req session 中 无 user
@@ -29,28 +31,17 @@ module.exports = app => {
 
   app.get('/index', checkLogin, (req, res) => {
     var username = req.session.username
+    var userId = req.session.userId
     var audit = {
       ip: req.ip,
+      // ip: '171.82.153.4',
       time: Date.now(),
-      agent: req.headers['user-agent']
+      agent: req.headers['user-agent'],
+      userId
     }
 
-    GetLocation(audit.ip)
-      .then(json => {
-        return json.json()
-      })
-      .then(obj => {
-        var status = {
-          location: obj.content.address,
-          device: UAParser(audit.agent).device.model || 'pc'
-        }
-        res.render('index', { username, status })
-      })
-      .catch(err => {
-        console.log(err)
-      })
-
-    AuditModel.insert(username, audit)
+    res.render('index', { username })
+    AuditModel.insert(audit)
   })
 
   app.get('/login', isLogined, (req, res) => {
@@ -65,6 +56,7 @@ module.exports = app => {
       .then(user => {
         if (user && user.passwd === password) {
           req.session.username = username
+          req.session.userId = user._id
           res.redirect('index')
         } else {
           // 登录失败
@@ -81,9 +73,89 @@ module.exports = app => {
     res.redirect('login')
   })
 
-  // test ua
-  app.get('/ua', (req, res) => {
-    console.log(UAParser(req.headers['user-agent']))
-    res.send(UAParser(req.headers['user-agent']))
+  // user setting
+  app.post('/setting', (req, res) => {
+    var location = req.body.location
+    var device = req.body.device
+    var userId = req.session.userId
+
+    SettingModel.insert({
+      location,
+      device,
+      userId
+    }).then(setting => {
+      if (setting) {
+        res.json({
+          status: 1
+        })
+      }
+    })
+  })
+
+  // show setting?
+  app.get('/setting', (req, res) => {
+    var userId = req.session.userId
+
+    var status = {
+      show: false
+    }
+
+    SettingModel.findOne({ userId })
+      .then(setting => {
+        if (!setting) {
+          ToSetting({
+            ip: '171.82.153.4',
+            agent: req.headers['user-agent']
+          }).then(obj => {
+            status = obj
+            status.show = true
+            res.json(status)
+          })
+        } else {
+          res.json(status)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  })
+
+  app.get('/audit', (req, res) => {
+    AuditModel.find({
+      normal: false,
+      userId: req.session.userId
+    })
+      .then(audits => {
+        var len = audits.length
+        var cnt = 0
+        var newAudit = []
+
+        audits.forEach(audit => {
+          var time = audit.time
+
+          ToSetting({
+            ip: audit.ip,
+            agent: audit.agent
+          })
+            .then(obj => {
+              audit = obj
+              audit.time = time
+              newAudit.push(audit)
+              return ++cnt
+            })
+            .then(cnt => {
+              if (cnt === len) {
+                newAudit.sort((a, b) => {
+                  return new Date(b.time) - new Date(a.time)
+                })
+
+                res.render('./audit/audit', { audits: newAudit })
+              }
+            })
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
   })
 }
