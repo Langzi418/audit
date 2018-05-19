@@ -35,30 +35,19 @@ module.exports = app => {
       agent: req.headers['user-agent']
     }
 
-    var location
-
     GetLocation(audit.ip)
-      .then(res => {
-        return res.json()
+      .then(json => {
+        return json.json()
       })
-      .then(res => {
-        result = JSON.stringify(res)
+      .then(obj => {
         var status = {
-          location: res.content.address,
-          device: UAParser(audit.agent).device.model || 'pc',
-          result
+          location: obj.content.address,
+          device: UAParser(audit.agent).device.model || 'pc'
         }
         res.render('index', { username, status })
       })
       .catch(err => {
         console.log(err)
-        console.log(audit.ip)
-        var status = {
-          location: '武汉',
-          device: UAParser(audit.agent).device.model || 'pc',
-          result
-        }
-        res.render('index', { username, status })
       })
 
     AuditModel.insert(username, audit)
