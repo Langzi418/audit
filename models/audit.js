@@ -13,7 +13,10 @@ function insert(audit) {
       // console.log(res1)
       SettingModel.findOne({ userId: audit.userId }).then(res2 => {
         // console.log(res2)
-        if (res1.location !== res2.location || res1.device !== res2.device) {
+        if (
+          res2 &&
+          (res1.location !== res2.location || res1.device !== res2.device)
+        ) {
           audit.normal = false
         }
 
