@@ -1,4 +1,4 @@
 module.exports = {
-  port: 8000,
+  port: 80,
   mongodb: 'mongodb://localhost:27017/audit'
 }
