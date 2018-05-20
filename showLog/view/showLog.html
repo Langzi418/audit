@@ -1,0 +1,43 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+</head>
+
+
+<body>
+<div id="top-line">
+  <span style="float:left;">{{ currentItem }}</span>
+  <select style="float:right;" onchange="selectLogType(this.value);">
+    <option v-for="item in itemList">{{ item }}</option>
+  </select>
+</div> 
+
+<div id="log-table">
+  <table width="100%" cellspacing="0" cellpadding="0" border="1px" bgcolor="#fff" align="center" id="test">
+    <tr>
+      <th width="10%">addr</th>
+      <th width="5%">user</th>
+      <th width="20%">time</th>
+      <th width="20%">agent</th>
+    </tr>
+    <tr v-for="item in log_data">
+      <td>{{ item["remote_addr"] }}</td>
+      <td>{{ item["remote_user"] }}</td>
+      <td>{{ item["time_local"] }}</td>
+      <td>{{ item["http_user_agent"] }}</td>
+    </tr>
+  </table><br>
+</div>
+
+<input id="button-export" type="button" value="导出EXCEL" onclick="javascript:exportTableById('test')" style="padding:5px;margin-top:20px;float:right;"/>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript" src="./showLog.js"></script>
+
+
+</body>
+</html>
