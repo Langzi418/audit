@@ -90,7 +90,7 @@ var top_line_app = new Vue({
 });
 
 var table_app = new Vue({
-    el: "#log-table",
+    el: "#log-table-div",
     data: {
         log_data:[]
     }
@@ -110,4 +110,6 @@ function selectLogType(itemName){
             table_app.log_data = data;
     });
 }
+
+selectLogType("ALL");
 

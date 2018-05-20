@@ -1,0 +1,42 @@
+#button-export {
+	padding: 5px;
+	margin-top: 20px;
+	float: right;
+}
+
+#top-line > span {
+	float: left;
+}
+
+#top-line > select {
+	float: right;
+}
+
+#log-table {
+	border-collapse:collapse;
+}
+
+#log-table thead th {
+	background-color: rgb(156, 186, 95);
+	color: #fff;
+	border-bottom-width: 0;
+}
+
+/* Column Style */
+#log-table td {
+	border: solid 1px #add9c0;
+}
+/* Heading and Column Style */
+#log-table tr, #log-table th {
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgb(156, 186, 95);
+}
+
+/* Padding and font style */
+#log-table td, #log-table th {
+	padding: 5px 10px;
+	font-size: 12px;
+	font-family: Verdana;
+	font-weight: bold;
+}
