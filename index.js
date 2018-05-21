@@ -5,6 +5,7 @@ const MongoStore = require('connect-mongo')(session)
 const routes = require('./routes/routes')
 const config = require('./config/config')
 const UserModel = require('./models/user')
+const md5 = require('blueimp-md5')
 
 const app = express()
 
@@ -56,5 +57,5 @@ function initUser(obj) {
     })
 }
 
-initUser({ name: 'guest', passwd: '123456' })
-initUser({ name: 'admin', passwd: '123456' })
+initUser({ name: 'guest', passwd: md5('123456', 'wust') })
+initUser({ name: 'admin', passwd: md5('123456', 'wust') })

@@ -13,12 +13,12 @@
 <body>
 	<div id="login" class="container">
 		<div class="row">
-			<form class="col s12 m6 offset-m3" action="/login-check" method="POST">
+			<form class="col s12 m6 offset-m3">
 				<div class="input-field">
 					<i class="material-icons prefix">
 						account_circle
 					</i>
-					<input id="username" type="text" name="username">
+					<input data-login="username" id="username" type="text" name="username">
 					<label for="username">用户名</label>
 				</div>
 
@@ -26,7 +26,7 @@
 					<i class="material-icons prefix">
 						vpn_key
 					</i>
-					<input id="password" type="password" name="password">
+					<input data-login="password" id="password" type="password" name="password">
 					<label for="password">密码</label>
 				</div>
 
@@ -38,7 +38,7 @@
 				</p>
 
 				<p>
-					<button id="login-btn" class="waves-effect waves-light btn" type="submit">登录</button>
+					<button data-login="login-btn" id="login-btn" class="waves-effect waves-light btn" type="submit">登录</button>
 				</p>
 
 			</form>
@@ -47,6 +47,8 @@
 	</div>
 
 	<script src="./scripts/materialize.min.js"></script>
+	<script src="./scripts/md5.min.js"></script>
+	<script src="./scripts/login.js"></script>
 </body>
 
 </html>

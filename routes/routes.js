@@ -33,8 +33,8 @@ module.exports = app => {
     var username = req.session.username
     var userId = req.session.userId
     var audit = {
-      ip: req.ip,
-      // ip: '171.82.153.4',
+      // ip: req.ip,
+      ip: '171.82.153.4',
       time: Date.now(),
       agent: req.headers['user-agent'],
       userId
@@ -57,10 +57,14 @@ module.exports = app => {
         if (user && user.passwd === password) {
           req.session.username = username
           req.session.userId = user._id
-          res.redirect('index')
+          res.json({
+            status: 1
+          })
         } else {
           // 登录失败
-          res.redirect('login')
+          res.json({
+            status: 0
+          })
         }
       })
       .catch(err => {
