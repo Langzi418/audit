@@ -25,10 +25,15 @@ function get_all_log()
 function get_log_by_ip($ip)
 {
 	$manager = new MongoDB\Driver\Manager(DB_CONNECTION);
-	$filter = array('remote_addr' => (int)$ip);
-	$query = new MongoDB\Driver\Query($filter, []);
-	$cursor = $manager->executeQuery(DB_NAME.".".COLLECTION_NAME, $query);
-	$res = obj2array($cursor);
+	$cmd = new MongoDB\Driver\Command([
+		'aggregate' => COLLECTION_NAME,
+		'pipeline' => [
+			['$group' => ['_id' => '$remote_addr','count' => ['$sum' => 1]]
+		]]
+	]);
+
+	$rows = $manager->executeCommand(DB_NAME, $cmd);
+	$res = obj2array($rows);
 	return $res;
 }
 

@@ -25,14 +25,14 @@ class Log_data extends CI_Controller {
 
 	public function get_log_by_agent()
 	{
-		$ip = $this->input->get('agent', TRUE);
+		$agent = $this->input->get('agent', TRUE);
 		$res = get_log_by_agent($agent);
 		$this->output->set_content_type('application/json')->set_output(json_encode($res));
 	}
 
 	public function get_log_by_time()
 	{
-		$ip = $this->input->get('time', TRUE);
+		$time = $this->input->get('time', TRUE);
 		$res = get_log_by_time($time);
 		$this->output->set_content_type('application/json')->set_output(json_encode($res));
 	}
