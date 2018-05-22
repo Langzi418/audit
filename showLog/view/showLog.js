@@ -81,35 +81,60 @@ var tableToExcel = (function() {
     })()
 
 
-var top_line_app = new Vue({
-    el: "#top-line",
-    data: {
-        currentItem: "ALL LOG",
-        itemList: ['ALL','IP','TIME',"AGENT"],
-    },
-});
 
-var table_app = new Vue({
-    el: "#log-table-div",
+var div_app = new Vue({
+    el: "#log-div",
     data: {
-        log_data:[]
+        log_data:[],
+        currentItem: "ALL LOG",
+        columnItem: ['remote_addr','remote_user','time_local','http_user_agent'],
+        itemList: ['ALL','IP','TIME',"AGENT"],
     }
 });
 
 //itemName: address so on...
 function selectLogType(itemName){
     //remote_addr   remote_user   time_local  http_user_agent 
-    top_line_app.currentItem = itemName + " LOG";
-    $.get("http://182.254.154.18/log-sum/index.php/Log_data/get_all_log",
+    var columnData = {
+        ALL: ['remote_addr','remote_user','time_local','http_user_agent'],
+        IP: ['IP','count'],
+        TIME: ['TIME','count'],
+        AGENT: ['AGENT','count']
+    };
+    var urlList = {
+        ALL: 'get_all_log',
+        IP: 'get_log_by_ip',
+        TIME: 'get_log_by_time',
+        AGENT: 'get_log_by_agent'
+    };
+
+    div_app.currentItem = itemName + " LOG";
+    $.get("http://182.254.154.18/log-sum/index.php/Log_data/"+urlList[itemName],
         function(data, status){
             if(status != "success"){
                 alert("获取数据失败");
                 return;
             }
             console.log(data);
-            table_app.log_data = data;
+            if(itemName != "ALL"){
+                var res = [];
+                //把返回的data中的_id列改成各自的列名称
+                for(var index in data[0]['result']){
+                    var tmp = {};
+                    tmp['count'] = data[0]['result'][index]['count'];
+                    tmp[columnData[itemName][0]] = data[0]['result'][index]['_id'];
+                    res.push(tmp);
+                }
+                div_app.log_data = res;
+                console.log(res);
+            }else{
+                div_app.log_data = data;
+            }
+            
+            div_app.columnItem = columnData[itemName];
     });
 }
 
+//init
 selectLogType("ALL");
 

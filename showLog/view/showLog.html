@@ -8,44 +8,37 @@
 
 
 <body>
-<div id="top-line">
-  <span>{{ currentItem }}</span>
-  <select onchange="selectLogType(this.value);">
-    <option v-for="item in itemList">{{ item }}</option>
-  </select>
-</div> 
 
-<div id="log-table-div">
+<div id="log-div">
+  <div id="top-line">
+    <span>{{ currentItem }}</span>
+    <select onchange="selectLogType(this.value);">
+      <option v-for="item in itemList">{{ item }}</option>
+    </select>
+  </div>
+
 <!--
 width="100%" cellspacing="0" cellpadding="0" border="1px" bgcolor="#fff" align="center"
 -->
 
-  <table  id="log-table">
+  <table id="log-table">
     <caption>日志列表</caption>
     <thead>
       <tr>
-        <th width="10%">addr</th>
-        <th width="5%">user</th>
-        <th width="15%">time</th>
-        <th width="20%">agent</th>
+        <th v-for="column in columnItem">{{ column }}</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="item in log_data">
-        <td>{{ item["remote_addr"] }}</td>
-        <td>{{ item["remote_user"] }}</td>
-        <td>{{ item["time_local"] }}</td>
-        <td>{{ item["http_user_agent"] }}</td>
+        <td v-for="index in columnItem">{{ item[index] }}</td>
       </tr>
     </tbody>
   </table>
   <br>
-</div>
 
 <input id="button-export" type="button" value="导出EXCEL" onclick="javascript:exportTableById('log-table')"/>
+</div> 
 
 <script type="text/javascript" src="./showLog.js"></script>
-
-
 </body>
 </html>
