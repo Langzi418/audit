@@ -22,7 +22,7 @@ function get_all_log()
 	return $res;
 }
 
-function get_log_by_ip($ip)
+function get_log_by_ip()
 {
 	$manager = new MongoDB\Driver\Manager(DB_CONNECTION);
 	$cmd = new MongoDB\Driver\Command([
@@ -31,28 +31,35 @@ function get_log_by_ip($ip)
 			['$group' => ['_id' => '$remote_addr','count' => ['$sum' => 1]]
 		]]
 	]);
-
 	$rows = $manager->executeCommand(DB_NAME, $cmd);
 	$res = obj2array($rows);
 	return $res;
 }
 
-function get_log_by_agent($agent)
+function get_log_by_agent()
 {
 	$manager = new MongoDB\Driver\Manager(DB_CONNECTION);
-	$filter = array('http_user_agent' => $agent);
-	$query = new MongoDB\Driver\Query($filter, []);
-	$cursor = $manager->executeQuery(DB_NAME.".".COLLECTION_NAME, $query);
-	$res = obj2array($cursor);
+	$cmd = new MongoDB\Driver\Command([
+		'aggregate' => COLLECTION_NAME,
+		'pipeline' => [
+			['$group' => ['_id' => '$http_user_agent','count' => ['$sum' => 1]]
+		]]
+	]);
+	$rows = $manager->executeCommand(DB_NAME, $cmd);
+	$res = obj2array($rows);
 	return $res;
 }
 
-function get_log_by_time($time)
+function get_log_by_time()
 {
 	$manager = new MongoDB\Driver\Manager(DB_CONNECTION);
-	$filter = array('time_local' => $time);
-	$query = new MongoDB\Driver\Query($filter, []);
-	$cursor = $manager->executeQuery(DB_NAME.".".COLLECTION_NAME, $query);
-	$res = obj2array($cursor);
+	$cmd = new MongoDB\Driver\Command([
+		'aggregate' => COLLECTION_NAME,
+		'pipeline' => [
+			['$group' => ['_id' => '$time_local','count' => ['$sum' => 1]]
+		]]
+	]);
+	$rows = $manager->executeCommand(DB_NAME, $cmd);
+	$res = obj2array($rows);
 	return $res;
 }
